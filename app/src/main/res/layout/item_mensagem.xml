@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutMensagem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <!-- Balão da mensagem -->
+    <LinearLayout
+        android:id="@+id/layoutBalao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:maxWidth="250dp"
+        android:background="@drawable/balao_mensagem_recebida">
+
+        <!-- Texto da mensagem -->
+        <TextView
+            android:id="@+id/textMensagem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Texto da mensagem"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+        <!-- Hora da mensagem -->
+        <TextView
+            android:id="@+id/textHora"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textSize="10sp"
+            android:textColor="#666666"
+            android:layout_gravity="end"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

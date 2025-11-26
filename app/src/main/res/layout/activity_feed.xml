@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#A6D0F3"
+    tools:context=".activity_feed">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="#E8258E"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Orkut"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginEnd="16dp" />
+
+        <EditText
+            android:id="@+id/editTextPesquisa"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background=" @drawable/edittext_background"
+            android:padding="12dp"
+            android:textSize="14sp"
+            android:hint="Pesquisar..."
+            android:textColorHint="@color/white" />
+
+        <!-- Lupa de Pesquisa -->
+        <ImageView
+            android:id="@+id/imageViewLupa"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/ic_menu_search"
+            app:tint="@color/white"
+            android:layout_marginStart="8dp"
+            android:clickable="true" />
+
+        <!-- Sino de Notificação -->
+        <ImageView
+            android:id="@+id/imageViewNotificacao"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_popup_reminder"
+            app:tint="@color/white"
+            android:layout_marginStart="16dp"
+            android:clickable="true" />
+
+        <!-- Ícone de Contatos/Amigos -->
+        <ImageView
+            android:id="@+id/imageViewContatos"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_menu_send"
+            app:tint="@color/white"
+            android:layout_marginStart="16dp"
+            android:clickable="true" />
+
+    </LinearLayout>
+
+    <!-- Área de Publicações (ScrollView) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewPublicacoes"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp"
+        android:scrollbars="vertical" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#E8258E"
+        android:padding="16dp"
+        android:gravity="center">
+
+        <!-- Ícone Casa (Feed) -->
+        <ImageView
+            android:id="@+id/imageViewHome"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_menu_home"
+            app:tint="@color/white"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+        <!-- Ícone + (Nova Publicação) -->
+        <ImageView
+            android:id="@+id/imageViewNovaPublicacao"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_menu_add"
+            app:tint="@color/white"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+        <!-- Ícone Perfil -->
+        <ImageView
+            android:id="@+id/imageViewPerfil"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_menu_myplaces"
+            app:tint="@color/white"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+    </LinearLayout>
+
+</LinearLayout>

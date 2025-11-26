@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#A6D0F3"
+    tools:context=".activity_mensagem">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="#E8258E"
+        android:gravity="center_vertical">
+
+        <!-- Botão Voltar -->
+        <ImageView
+            android:id="@+id/imageViewVoltar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_menu_close_clear_cancel"
+            app:tint="@color/white"
+            android:clickable="true" />
+
+        <TextView
+            android:id="@+id/textViewNomeContato"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nome do Contato"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:gravity="center" />
+
+        <ImageView
+            android:id="@+id/imageViewAdicionarAmigos"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_add_person"
+            android:layout_gravity="center"
+            app:tint="@color/white"
+            android:layout_marginBottom="2dp"
+            android:clickable="true" />
+
+        <!-- Espaço para alinhar -->
+        <View
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+    </LinearLayout>
+
+    <!-- Área das Mensagens (RecyclerView) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewMensagens"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp" />
+
+    <!-- Área de Digitar Mensagem -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <EditText
+            android:id="@+id/editTextMensagem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
+            android:textSize="14sp"
+            android:hint="Digite sua mensagem..."
+            android:maxLines="3" />
+
+        <ImageView
+            android:id="@+id/imageViewEnviar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_menu_send"
+            app:tint="@color/black"
+            android:layout_marginStart="8dp"
+            android:clickable="true" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#E8258E"
+        android:padding="16dp"
+        android:gravity="center">
+
+        <!-- Ícone Casa (Feed) -->
+        <ImageView
+            android:id="@+id/imageViewHome"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_menu_home"
+            app:tint="@color/white"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+
+        <!-- Ícone Perfil -->
+        <ImageView
+            android:id="@+id/imageViewPerfil"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_menu_myplaces"
+            app:tint="@color/white"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+    </LinearLayout>
+
+</LinearLayout>

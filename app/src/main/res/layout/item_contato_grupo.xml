@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/edittext_background"
+    android:padding="16dp"
+    android:layout_margin="8dp"
+    android:elevation="2dp">
+
+    <!-- Informações do Contato (lado esquerdo) -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtNomeContato"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nome do Contato"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <!-- Botão Criar Grupo (lado direito) -->
+    <Button
+        android:id="@+id/btnCriarGrupo"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:text="Criar Grupo"
+        android:textSize="12sp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:backgroundTint="@color/white"
+        android:textColor="#E8258E"  />
+
+</LinearLayout>

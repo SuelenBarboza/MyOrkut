@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#A6D0F3"
+    tools:context=".Activity_Grupo">
+
+    <!-- Header (igual ao feed) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="#E8258E"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grupo"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginEnd="16dp" />
+
+        <EditText
+            android:id="@+id/editTextPesquisa"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
+            android:textSize="14sp"
+            android:textColorHint="@color/white" />
+
+        <ImageView
+            android:id="@+id/imageViewLupa"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_menu_search"
+            app:tint="@color/white"
+            android:layout_marginStart="8dp"
+            android:clickable="true" />
+
+        <ImageView
+            android:id="@+id/imageViewNotificacao"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_popup_reminder"
+            app:tint="@color/white"
+            android:layout_marginStart="16dp"
+            android:clickable="true" />
+
+    </LinearLayout>
+
+    <!-- Lista de Contatos -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:id="@+id/linearLayoutContatos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </ScrollView>
+
+    <!-- Footer (igual ao feed) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#E8258E"
+        android:padding="16dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/imageViewHome"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_menu_home"
+            app:tint="@color/white"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+        <ImageView
+            android:id="@+id/imageViewNovaPublicacao"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_menu_add"
+            app:tint="@color/white"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+        <ImageView
+            android:id="@+id/imageViewPerfil"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_menu_myplaces"
+            app:tint="@color/white"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+    </LinearLayout>
+
+</LinearLayout>

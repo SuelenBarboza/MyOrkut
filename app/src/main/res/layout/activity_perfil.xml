@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#A6D0F3"
+    tools:context=".activity_perfil">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="#E8258E"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Meu Perfil"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginEnd="16dp" />
+
+        <EditText
+            android:id="@+id/editTextPesquisa"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
+            android:textSize="14sp"
+            android:hint="Pesquisar no perfil..."
+            android:textColorHint="@color/white" />
+
+        <ImageView
+            android:id="@+id/imageViewLupa"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/ic_menu_search"
+            app:tint="@color/white"
+            android:layout_marginStart="8dp"
+            android:clickable="true" />
+
+        <ImageView
+            android:id="@+id/imageViewNotificacao"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_popup_reminder"
+            app:tint="@color/white"
+            android:layout_marginStart="16dp"
+            android:clickable="true" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_margin="16dp"
+        android:elevation="4dp">
+
+        <TextView
+            android:id="@+id/textViewNomeUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nome do Usuário"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/textViewApelido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=" @apelido"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/buttonConvidarAmigos"
+                android:layout_width="180sp"
+                android:layout_height="50sp"
+                android:layout_margin="8dp"
+                android:text="+ Convidar Amigos"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:backgroundTint="#E8258E"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/btnLoggout"
+                android:layout_width="160sp"
+                android:layout_height="50sp"
+                android:text="Sair"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:backgroundTint="#E8258E"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/textViewPublicacoesCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#E8258E"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="publicações"
+                android:textSize="14sp"
+                android:textColor="#E8258E" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Lista de Publicações do Usuário -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewPublicacoes"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp" />
+
+    <!-- Footer -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#E8258E"
+        android:padding="16dp"
+        android:gravity="center">
+
+        <!-- Ícone Casa (Feed) -->
+        <ImageView
+            android:id="@+id/imageViewHome"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_menu_home"
+            app:tint="@color/white"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+        <!-- Ícone Nova Publicação -->
+        <ImageView
+            android:id="@+id/imageViewNovaPublicacao"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_menu_add"
+            app:tint="@color/white"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+        <!-- Ícone Perfil -->
+        <ImageView
+            android:id="@+id/imageViewPerfil"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_menu_myplaces"
+            app:tint="@color/white"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+
+    </LinearLayout>
+
+</LinearLayout>
