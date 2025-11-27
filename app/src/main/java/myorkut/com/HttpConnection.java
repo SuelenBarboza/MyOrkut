@@ -16,7 +16,7 @@ import java.net.URL;
 public class HttpConnection {
 
     // Suelen private static final String BASE_URL = "http://172.19.160.1:3000/api/";
-    private static final String BASE_URL = "http://192.168.0.103:3000/api/"; // Eliseu
+    private static final String BASE_URL = "http://192.168.1.104:3000/api/"; // Eliseu
     private static final String PREFS = "app_prefs";
     private static final String TOKEN_KEY = "jwt_token";
 

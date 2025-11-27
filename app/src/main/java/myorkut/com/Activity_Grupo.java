@@ -25,7 +25,7 @@ public class Activity_Grupo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat); // Verifique se este layout é o correto
+        setContentView(R.layout.activity_grupo);
 
         initViews();
         setupClickListeners();
@@ -73,7 +73,9 @@ public class Activity_Grupo extends AppCompatActivity {
 
                 usuarioId = usuarioLogadoId.replace("\"", "");
 
-                String response = HttpConnection.get("messages/" + usuarioId, this);
+                String response = HttpConnection.get("contacts/" + usuarioId, this);
+
+                System.out.println("RESPOSTA BRUTA: " + response);
 
                 if (response == null || response.isEmpty()) {
                     runOnUiThread(this::exibirMensagemSemContatos);
@@ -90,35 +92,40 @@ public class Activity_Grupo extends AppCompatActivity {
                         return;
                     }
 
-                    HashSet<String> contatosUnicos = new HashSet<>();
-
                     for (int i = 0; i < jsonArray.length(); i++) {
                         try {
-                            JSONObject msgObj = jsonArray.getJSONObject(i);
+                            JSONObject contatoObj = jsonArray.getJSONObject(i);
 
-                            String usuarioQueEnviou = msgObj.optString("USUID", "");
-                            String usuarioQueRecebeu = msgObj.optString("CONTATOID", "");
+                            // Tente diferentes chaves possíveis
+                            String contatoId = contatoObj.optString("contatoId",
+                                    contatoObj.optString("CONTATOID",
+                                            contatoObj.optString("id", "")));
 
-                            String nomeUsuario = msgObj.optString("NOMEUSUARIO", "Desconhecido");
-                            String descricao = msgObj.optString("DESCRICAO", "");
-                            String status = msgObj.optString("STATUS", "");
+                            String nomeContato = contatoObj.optString("nomeContato",
+                                    contatoObj.optString("NOMECONTATO",
+                                            contatoObj.optString("nome", "Desconhecido")));
 
-                            String contatoId;
-
-                            if (usuarioQueEnviou.equals(usuarioId)) {
-                                contatoId = usuarioQueRecebeu;
-                            } else {
-                                contatoId = usuarioQueEnviou;
+                            // Se ainda não encontrou, use as chaves originais
+                            if (contatoId.isEmpty()) {
+                                contatoId = contatoObj.optString("usu1Id", "");
                             }
 
-                            if (contatosUnicos.contains(contatoId)) continue;
-                            contatosUnicos.add(contatoId);
+                            if (nomeContato.equals("Desconhecido")) {
+                                nomeContato = contatoObj.optString("nomeUsuario", "Contato");
+                            }
 
-                            String nomeReduzido = nomeUsuario.length() > 6
-                                    ? nomeUsuario.substring(0, 6) + "..."
-                                    : nomeUsuario;
+                            // Pular se não tem ID válido ou é o próprio usuário
+                            if (contatoId.isEmpty() || contatoId.equals(usuarioId)) {
+                                continue;
+                            }
 
-                            adicionarContatoComBotaoGrupo(contatoId, nomeReduzido, status, descricao);
+                            String nomeReduzido = nomeContato.length() > 6
+                                    ? nomeContato.substring(0, 6) + "..."
+                                    : nomeContato;
+
+                            adicionarContatoComBotaoGrupo(contatoId, nomeReduzido, "contato", "");
+
+                            System.out.println("Contato adicionado: " + nomeContato);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -129,7 +136,7 @@ public class Activity_Grupo extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
                 runOnUiThread(() ->
-                        Toast.makeText(this, "Erro ao carregar mensagens", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Erro: " + e.getMessage(), Toast.LENGTH_LONG).show()
                 );
             }
         }).start();
@@ -143,33 +150,108 @@ public class Activity_Grupo extends AppCompatActivity {
         txt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         linearLayoutContatos.addView(txt);
     }
-
     private void adicionarContatoComBotaoGrupo(String contatoId, String nome, String status, String ultimaMensagem) {
-        View view = getLayoutInflater().inflate(R.layout.item_contato_grupo, null);
+        try {
+            View view = getLayoutInflater().inflate(R.layout.item_contato_grupo, null);
 
-        TextView txtNome = view.findViewById(R.id.txtNomeContato);
-        Button btnCriarGrupo = view.findViewById(R.id.btnCriarGrupo);
+            TextView txtNome = view.findViewById(R.id.txtNomeContato);
+            Button btnCriarGrupo = view.findViewById(R.id.btnCriarGrupo);
 
-        txtNome.setText(nome);
+            txtNome.setText(nome);
 
-        view.setOnClickListener(v -> {
-            onContatoClick(contatoId, nome);
-        });
+            view.setOnClickListener(v -> {
+                onContatoClick(contatoId, nome);
+            });
 
-        btnCriarGrupo.setOnClickListener(v -> {
-            criarGrupoComContato(contatoId, nome);
-        });
+            btnCriarGrupo.setOnClickListener(v -> {
+                criarGrupoComContato(contatoId, nome);
+            });
 
-        linearLayoutContatos.addView(view);
+            linearLayoutContatos.addView(view);
+
+            System.out.println("SUCESSO: Contato '" + nome + "' adicionado à tela");
+
+        } catch (Exception e) {
+            System.out.println("ERRO ao inflar layout: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
-
     private void criarGrupoComContato(String contatoId, String contatoNome) {
-        // TODO: Implementar criação real de grupo
-        Toast.makeText(this,
-                "Criar grupo com: " + contatoNome + " (ID: " + contatoId + ")",
-                Toast.LENGTH_LONG).show();
+        new Thread(() -> {
+            try {
+                // 1. Criar o grupo
+                JSONObject jsonGrupo = new JSONObject();
+                jsonGrupo.put("nome", "Grupo com " + contatoNome);
+                jsonGrupo.put("descricao", "Grupo criado pelo app");
+                jsonGrupo.put("status", "ATIVO");
 
+                String grupoResponse = HttpConnection.post("groups", jsonGrupo.toString(), this);
+
+                System.out.println("RESPOSTA CRIAÇÃO GRUPO: " + grupoResponse);
+
+                if (grupoResponse == null || grupoResponse.isEmpty()) {
+                    runOnUiThread(() ->
+                            Toast.makeText(this, "Erro ao criar grupo - resposta vazia", Toast.LENGTH_LONG).show()
+                    );
+                    return;
+                }
+
+                JSONObject grupoJson = new JSONObject(grupoResponse);
+                String grupoId = grupoJson.optString("id", "");
+
+                // Tenta diferentes possibilidades de chave para o ID
+                if (grupoId.isEmpty()) {
+                    grupoId = grupoJson.optString("ID", "");
+                }
+                if (grupoId.isEmpty()) {
+                    grupoId = grupoJson.optString("grupoId", "");
+                }
+
+                System.out.println("GRUPO ID OBTIDO: " + grupoId);
+
+                if (grupoId.isEmpty()) {
+                    runOnUiThread(() ->
+                            Toast.makeText(this, "Erro: grupo sem ID retornado", Toast.LENGTH_LONG).show()
+                    );
+                    return;
+                }
+
+                // 2. Adicionar usuário logado ao grupo
+                SharedPreferences sharedPref = getSharedPreferences("app_prefs", MODE_PRIVATE);
+                String usuarioLogadoId = sharedPref.getString("usuario_logado", "").replace("\"", "");
+
+                JSONObject bodyUser = new JSONObject();
+                bodyUser.put("grupoId", grupoId);
+                bodyUser.put("usuarioId", usuarioLogadoId);
+
+                String responseUser = HttpConnection.post("groups/members", bodyUser.toString(), this);
+                System.out.println("RESPOSTA ADD USUÁRIO: " + responseUser);
+
+                // 3. Adicionar contato ao grupo
+                JSONObject bodyContato = new JSONObject();
+                bodyContato.put("grupoId", grupoId);
+                bodyContato.put("usuarioId", contatoId);
+
+                String responseContato = HttpConnection.post("groups/members", bodyContato.toString(), this);
+                System.out.println("RESPOSTA ADD CONTATO: " + responseContato);
+
+                runOnUiThread(() -> {
+                    Toast.makeText(this,
+                            "Grupo criado e membros adicionados com sucesso!",
+                            Toast.LENGTH_LONG).show();
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                runOnUiThread(() -> {
+                    Toast.makeText(this,
+                            "Erro ao criar grupo: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                });
+            }
+        }).start();
     }
+
 
     private void onContatoClick(String contatoId, String contatoNome) {
         Intent intent = new Intent(Activity_Grupo.this, activity_mensagem.class);

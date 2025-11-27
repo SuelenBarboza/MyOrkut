@@ -148,7 +148,7 @@ public class activity_notificacao extends AppCompatActivity {
             usuarioId = usuarioId.replace("\"", "");
 
             WebSocket ws = new WebSocketFactory()
-                    .createSocket("ws://192.168.0.102:3000/" + usuarioId)
+                    .createSocket("ws://192.168.1.104:3000/" + usuarioId)
                     .connect();
 
             ws.addListener(new WebSocketAdapter() {

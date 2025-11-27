@@ -30,7 +30,7 @@ public class activity_mensagem extends AppCompatActivity {
 
     private static final String TAG = "ChatRealTime";
     // base do websocket — o ID do usuário será acrescentado dinamicamente
-    private static final String WS_BASE = "ws://192.168.0.102:3000/messages/";
+    private static final String WS_BASE = "ws://192.168.1.104:3000/messages/";
 
     private TextView textViewNomeContato;
     private EditText editTextMensagem;
