@@ -47,6 +47,7 @@ public class activity_notificacao extends AppCompatActivity {
         usuarioId = prefs.getString("usuario_logado", null);
 
         carregarNotificacoesDaAPI();
+       //CarregarNotificacaoMensagem();
         conectarRealtime();
     }
 
@@ -130,6 +131,48 @@ public class activity_notificacao extends AppCompatActivity {
         }).start();
     }
 
+    private void CarregarNotificacaoMensagem(){
+        new Thread(() -> {
+            try {
+                String response = HttpConnection.get("notifications/" + usuarioId, activity_notificacao.this);
+
+                if (response == null || response.isEmpty()) {
+                    runOnUiThread(() -> Toast.makeText(this, "Nenhuma notificação encontrada", Toast.LENGTH_SHORT).show());
+                    return;
+                }
+
+                JSONArray jsonArray = new JSONArray(response);
+
+                runOnUiThread(() -> {
+                    try {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject obj = jsonArray.getJSONObject(i);
+
+                            String tipo = obj.optString("notifications", "");
+                            String remetenteNome = obj.optString("nomeUsuario", "Usuário");
+                            String data = obj.getString("data");
+
+                            ZonedDateTime zdt = ZonedDateTime.parse(data);
+                            ZonedDateTime zdtBrazil = zdt.withZoneSameInstant(ZoneId.of("America/Sao_Paulo"));
+                            String horaBrasil = zdtBrazil.format(DateTimeFormatter.ofPattern("HH:mm"));
+
+                            String texto = gerarTexto(tipo, remetenteNome);
+
+                            adicionarNotificacao(remetenteNome, texto, horaBrasil, tipo);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+    }
+
     private String gerarTexto(String tipo, String remetente) {
         switch (tipo) {
             case "CN":
@@ -137,7 +180,7 @@ public class activity_notificacao extends AppCompatActivity {
             case "COMENTARIO":
                 return remetente + " comentou na sua publicação";
             case "MENSAGEM":
-                return "Nova mensagem de " + remetente;
+                return "Nova mensagem" + remetente;
             default:
                 return "Nova notificação";
         }
@@ -148,7 +191,7 @@ public class activity_notificacao extends AppCompatActivity {
             usuarioId = usuarioId.replace("\"", "");
 
             WebSocket ws = new WebSocketFactory()
-                    .createSocket("ws://192.168.1.104:3000/" + usuarioId)
+                    .createSocket("ws://192.168.0.25:3000/" + usuarioId)
                     .connect();
 
             ws.addListener(new WebSocketAdapter() {
