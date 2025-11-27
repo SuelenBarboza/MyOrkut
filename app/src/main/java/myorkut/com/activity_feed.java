@@ -75,7 +75,7 @@ public class activity_feed extends AppCompatActivity {
 
                         listaPublicacoes.clear();
 
-                        // Verifica se resposta é objeto ou array
+
                         Object json = new JSONTokener(response).nextValue();
 
                         if (json instanceof JSONArray) {
@@ -110,7 +110,7 @@ public class activity_feed extends AppCompatActivity {
 
                         } else if (json instanceof JSONObject) {
 
-                            // Quando a API retorna erro ou objeto único
+
                             JSONObject obj = (JSONObject) json;
 
                             String erro = obj.optString("error", "Resposta inesperada do servidor");
@@ -136,9 +136,6 @@ public class activity_feed extends AppCompatActivity {
             }
         }).start();
     }
-
-
-
 
 
     private void setupClickListeners() {
@@ -206,7 +203,6 @@ public class activity_feed extends AppCompatActivity {
     }
 
     private void pesquisarPublicacoes(String termoPesquisa) {
-        // TODO: Implementar pesquisa no banco de dados
 
         List<PublicacaoComUsuario> resultados = new ArrayList<>();
 

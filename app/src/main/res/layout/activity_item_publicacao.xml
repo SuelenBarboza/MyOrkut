@@ -64,7 +64,6 @@
             android:id="@+id/textComentariosCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
             android:textSize="12sp"
             android:textColor="@color/black" />
 

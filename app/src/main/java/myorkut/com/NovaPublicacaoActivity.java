@@ -43,7 +43,6 @@ public class NovaPublicacaoActivity extends AppCompatActivity {
         setupClickListeners();
         setupTextWatcher();
 
-        // 🔥 Novo callback para substituir onBackPressed() depreciado
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -139,7 +138,6 @@ public class NovaPublicacaoActivity extends AppCompatActivity {
             return;
         }
 
-        //correcao da api enviando id com aspas e barra
         if (usuarioId != null) {
             usuarioId = usuarioId.replace("\"", "");
         }

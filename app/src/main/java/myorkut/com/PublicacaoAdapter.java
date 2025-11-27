@@ -81,8 +81,6 @@ public class PublicacaoAdapter extends RecyclerView.Adapter<PublicacaoAdapter.Vi
             textApelido.setText(publicacao.getUsu_nome());
             textData.setText(formatarData(publicacao.getPub_data()));
             textPublicacao.setText(publicacao.getPub_texto());
-            //contador do banco fixo com exemplo
-            textComentariosCount.setText("2"); // TODO: Buscar do banco
 
             layoutComentario.setTag(publicacao);
         }

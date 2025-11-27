@@ -17,8 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class activity_comentarios extends AppCompatActivity {
 
@@ -48,10 +51,10 @@ public class activity_comentarios extends AppCompatActivity {
         initViews();
         setupRecyclerView();
         setupClickListeners();
-        carregarComentarios();
         exibirPublicacaoOriginal();
-    }
 
+        carregarComentarios();
+    }
     private void obterUsuarioLogado() {
         SharedPreferences sharedPref = getSharedPreferences("app_prefs", MODE_PRIVATE);
         usuarioLogadoId = sharedPref.getString("usuario_logado", "usuario_teste");
@@ -90,7 +93,10 @@ public class activity_comentarios extends AppCompatActivity {
     private void setupClickListeners() {
         imageViewVoltar.setOnClickListener(v -> finish());
 
-        imageViewEnviarComentario.setOnClickListener(v -> enviarComentario());
+        imageViewEnviarComentario.setOnClickListener(v -> {
+            Log.d("CLICK", "Botão enviar comentário clicado");
+            enviarComentario();
+        });
     }
 
     private void exibirPublicacaoOriginal() {
@@ -102,20 +108,110 @@ public class activity_comentarios extends AppCompatActivity {
     }
 
     private void carregarComentarios() {
-        // TODO: Fazer GET na rota /comments?pubId=...
-        // Temporário vazio
-        comentarioAdapter.notifyDataSetChanged();
+        new Thread(() -> {
+            try {
+                if (publicacao == null || publicacao.getPub_id() == null) {
+                    runOnUiThread(() ->
+                            Toast.makeText(this, "Publicação não encontrada", Toast.LENGTH_SHORT).show()
+                    );
+                    return;
+                }
+
+                String pubId = publicacao.getPub_id();
+                Log.d("API_COMMENTS", "Buscando comentários para pubId: " + pubId);
+
+                String response = HttpConnection.get("comments/" + pubId, this);
+                Log.d("API_COMMENTS", "Resposta GET: " + response);
+
+                if (response == null || response.isEmpty()) {
+                    runOnUiThread(() -> {
+                        listaComentarios.clear();
+                        comentarioAdapter.notifyDataSetChanged();
+                        Toast.makeText(this, "Nenhum comentário encontrado", Toast.LENGTH_SHORT).show();
+                    });
+                    return;
+                }
+
+                org.json.JSONArray jsonArray = new org.json.JSONArray(response);
+                List<Comentario> comentariosCarregados = new ArrayList<>();
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    try {
+                        org.json.JSONObject comentarioObj = jsonArray.getJSONObject(i);
+
+                        String pubIdFromResponse = comentarioObj.optString("pubId", "");
+                        String usuId = comentarioObj.optString("usuId", "");
+                        String texto = comentarioObj.optString("texto", "");
+                        String data = comentarioObj.optString("data", "");
+                        String nomeUsuComment = comentarioObj.optString("nomeUsuComment", "Usuário");
+
+                        Log.d("API_COMMENTS", "Comentário " + i + ": " + nomeUsuComment + " - " + texto);
+
+                        Comentario comentario = new Comentario(
+                                pubIdFromResponse,
+                                usuId,
+                                texto,
+                                data,
+                                nomeUsuComment
+                        );
+
+                        comentariosCarregados.add(comentario);
+
+                    } catch (Exception e) {
+                        Log.e("API_COMMENTS", "Erro ao processar comentário " + i, e);
+                    }
+                }
+
+                runOnUiThread(() -> {
+                    listaComentarios.clear();
+                    listaComentarios.addAll(comentariosCarregados);
+                    comentarioAdapter.notifyDataSetChanged();
+
+                    if (!listaComentarios.isEmpty()) {
+                        recyclerViewComentarios.scrollToPosition(listaComentarios.size() - 1);
+                    }
+
+                    Log.d("API_COMMENTS", "Carregados: " + listaComentarios.size() + " comentários");
+
+                    if (listaComentarios.isEmpty()) {
+                        Toast.makeText(this, "Nenhum comentário encontrado", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            } catch (Exception e) {
+                Log.e("API_COMMENTS", "Erro ao carregar comentários", e);
+                runOnUiThread(() -> {
+                    listaComentarios.clear();
+                    comentarioAdapter.notifyDataSetChanged();
+                    Toast.makeText(this, "Erro ao carregar comentários: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        }).start();
     }
 
     private void enviarComentario() {
+
+        imageViewEnviarComentario.setAlpha(0.5f);
+        imageViewEnviarComentario.setClickable(false);
+
         String textoComentario = editTextComentario.getText().toString().trim();
 
         if (textoComentario.isEmpty()) {
             Toast.makeText(this, "Digite um comentário", Toast.LENGTH_SHORT).show();
+
+            imageViewEnviarComentario.setAlpha(1.0f);
+            imageViewEnviarComentario.setClickable(true);
             return;
         }
 
-        // 🔥 JSON enviado à API
+        if (publicacao == null || publicacao.getPub_id() == null) {
+            Toast.makeText(this, "Publicação não encontrada", Toast.LENGTH_SHORT).show();
+
+            imageViewEnviarComentario.setAlpha(1.0f);
+            imageViewEnviarComentario.setClickable(true);
+            return;
+        }
+        usuarioLogadoId = usuarioLogadoId.replace("\"","");
         JSONObject body = new JSONObject();
         try {
             body.put("pubId", publicacao.getPub_id());
@@ -125,51 +221,60 @@ public class activity_comentarios extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        Log.d("API_COMMENTS", "Enviando: " + body.toString());
+        Log.d("API_COMMENTS", "Enviando comentário: " + body.toString());
 
-        // 🔥 Fazendo requisição real
         new Thread(() -> {
-
-            String response = null;
             try {
-                response = HttpConnection.post("comments", body.toString(), activity_comentarios.this);
+                String response = HttpConnection.post("comments", body.toString(), activity_comentarios.this);
+                Log.d("API_COMMENTS", "Resposta do POST: " + response);
+
+                runOnUiThread(() -> {
+
+                    imageViewEnviarComentario.setAlpha(1.0f);
+                    imageViewEnviarComentario.setClickable(true);
+
+                    if (response == null || response.isEmpty()) {
+                        Toast.makeText(this, "Erro ao enviar comentário", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    try {
+                        JSONObject resp = new JSONObject(response);
+
+                        Log.d("API_COMMENTS", "RESPOSTA CREATE:");
+                        java.util.Iterator<String> keys = resp.keys();
+                        while (keys.hasNext()) {
+                            String key = keys.next();
+                            Log.d("API_COMMENTS", key + ": " + resp.opt(key));
+                        }
+
+                        boolean status = resp.optBoolean("status", true);
+
+                        if (status) {
+
+                            editTextComentario.setText("");
+                            carregarComentarios();
+
+                            Toast.makeText(this, "Comentário enviado!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Erro ao salvar comentário", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (Exception e) {
+                        Log.e("API_COMMENTS", "Erro ao processar resposta: " + e.getMessage(), e);
+                        Toast.makeText(this, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("API_COMMENTS", "Erro na requisição: " + e.getMessage(), e);
+                runOnUiThread(() -> {
+
+                    imageViewEnviarComentario.setAlpha(1.0f);
+                    imageViewEnviarComentario.setClickable(true);
+                    Toast.makeText(this, "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show();
+                });
             }
-
-            String finalResponse = response;
-
-            runOnUiThread(() -> {
-                if (finalResponse == null) {
-                    Toast.makeText(this, "Erro ao conectar com servidor", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                try {
-                    JSONObject resp = new JSONObject(finalResponse);
-
-                    // Criar objeto com retorno real
-                    Comentario comentarioSalvo = new Comentario(
-                            resp.getInt("id"),
-                            resp.getInt("pubId"),
-                            resp.getString("usuId"),
-                            usuarioLogadoNome,
-                            resp.getString("texto"),
-                            resp.getString("createdAt")
-                    );
-
-                    comentarioAdapter.adicionarComentario(comentarioSalvo);
-                    recyclerViewComentarios.scrollToPosition(comentarioAdapter.getItemCount() - 1);
-                    editTextComentario.setText("");
-
-                    Toast.makeText(this, "Comentário enviado!", Toast.LENGTH_SHORT).show();
-
-                } catch (Exception e) {
-                    Toast.makeText(this, "Erro ao processar resposta", Toast.LENGTH_SHORT).show();
-                    Log.e("API_COMMENTS", "Erro: " + e.getMessage());
-                }
-            });
         }).start();
     }
-
 }

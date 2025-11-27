@@ -1,27 +1,36 @@
 package myorkut.com;
 
 public class Comentario {
-    private int com_id;
-    private int pub_id;
-    private String usu_id;
-    private String usu_nome;
-    private String com_texto;
-    private String com_data;
+    private String pubId;
+    private String usuId;
+    private String texto;
+    private String data;
+    private String nomeUsuComment;
 
-    public Comentario(int com_id, int pub_id, String usu_id, String usu_nome, String com_texto, String com_data) {
-        this.com_id = com_id;
-        this.pub_id = pub_id;
-        this.usu_id = usu_id;
-        this.usu_nome = usu_nome;
-        this.com_texto = com_texto;
-        this.com_data = com_data;
+
+    public Comentario(String pubId, String usuId, String texto, String data, String nomeUsuComment) {
+        this.pubId = pubId;
+        this.usuId = usuId;
+        this.texto = texto;
+        this.data = data;
+        this.nomeUsuComment = nomeUsuComment;
+    }
+    public String getUsu_nome() {
+        return nomeUsuComment;
     }
 
-    // Getters
-    public int getCom_id() { return com_id; }
-    public int getPub_id() { return pub_id; }
-    public String getUsu_id() { return usu_id; }
-    public String getUsu_nome() { return usu_nome; }
-    public String getCom_texto() { return com_texto; }
-    public String getCom_data() { return com_data; }
+    public String getCom_data() {
+        return data;
+    }
+
+    public String getCom_texto() {
+        return texto;
+    }
+
+    // Outros getters se necessário
+    public String getPubId() { return pubId; }
+    public String getUsuId() { return usuId; }
+    public String getData() { return data; }
+    public String getNomeUsuComment() { return nomeUsuComment; }
+    public String getTexto() { return texto; }
 }

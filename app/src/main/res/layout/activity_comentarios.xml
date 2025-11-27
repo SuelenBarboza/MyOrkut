@@ -125,7 +125,8 @@
             android:src="@drawable/ic_menu_send"
             app:tint="@color/black"
             android:layout_marginStart="8dp"
-            android:clickable="true" />
+            android:clickable="true"
+            android:focusable="true"/>
 
     </LinearLayout>
 
